@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+
+    <title>GTA: Vice City — Play Free in Browser</title>
+    <meta name="description" content="Play GTA Vice City online free — the #1 GTA Vice City online game in your browser. No download, no install. GTA Vice City play online now on desktop and mobile. Free online gameplay, instant load." />
+    <meta name="keywords" content="gta vice city online, gta vice city play online, gta vice city play online free, gta vice city online game, gta vice city online free, gta vice city game play online, gta vice city online play in browser, gta vice city online play now, gta vice city free online game, gta vice city online download, gta vice city online gameplay, grand theft auto vice city online, GTA vice city browser game, GTA vice city no download, GTA vice city WASM" />
+    <meta name="author" content="GTA Vice City Online" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="theme-color" content="#131920" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GTA Vice City — Play Free in Browser" />
+    <meta property="og:description" content="Play GTA Vice City online free — no download, no install. Runs in your browser via WebAssembly." />
+    <meta property="og:image" content="/tommy.jpg" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GTA Vice City — Play Free in Browser" />
+    <meta name="twitter:description" content="Play GTA Vice City online free — no download, no install." />
+    <meta name="twitter:image" content="/tommy.jpg" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "Grand Theft Auto: Vice City",
+      "alternateName": ["GTA Vice City Online", "GTA Vice City Online Game"],
+      "description": "Play GTA Vice City online free in your browser. No download required.",
+      "genre": ["Action", "Open World"],
+      "gamePlatform": "Web Browser",
+      "url": "/",
+      "image": "/tommy.jpg",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Is this the full game? Do I need to upload files?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, this is the full GTA Vice City experience. No file uploads are required. The game files are downloaded automatically on first visit." } },
+        { "@type": "Question", "name": "How does the Save Manager work?", "acceptedAnswer": { "@type": "Answer", "text": "You can upload your existing .b save files from a PC or PS2 to resume your progress. You can also download backups to keep your virtual progress safe." } },
+        { "@type": "Question", "name": "Does it support controllers and mobile?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Gamepads are supported on desktop. On mobile, integrated touch controls are available. Play in landscape mode for best experience." } },
+        { "@type": "Question", "name": "Why does the game show a black screen or run poorly?", "acceptedAnswer": { "@type": "Answer", "text": "Make sure your browser supports WebAssembly and Service Workers (Chrome 110+, Firefox 111+, Safari 16.4+). Try refreshing. On slow devices, set the FPS limit to 30." } },
+        { "@type": "Question", "name": "Why are the physics acting weirdly or missions failing?", "acceptedAnswer": { "@type": "Answer", "text": "The original game was designed for 30 FPS. Running at higher framerates can cause physics glitches. Set the FPS limit to 30 in the settings above." } },
+        { "@type": "Question", "name": "My device is getting very hot. How do I fix this?", "acceptedAnswer": { "@type": "Answer", "text": "Set the FPS limit to 30 to reduce CPU/GPU load. This significantly reduces heat output on mobile and low-end devices." } }
+      ]
+    }
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/webp" href="/icon.webp" sizes="32x32" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+
+  <body
+    class="app-body"
+    data-is-touch="0"
+    data-state-car="0"
+    data-state-car-gun="0"
+    data-state-gun="0"
+    data-state-bike="0"
+    data-state-menu="1"
+    data-state-cutscene="0"
+    data-state-mobring="0"
+    data-state-job="0"
+    data-state-disable-controls="0"
+    data-state-panzer="0"
+    data-state-car-with-weapon="0"
+    data-state-hunter="0"
+    data-state-scope-mode="0"
+    data-state-scope-gun="0"
+  >
+
+    <!-- Rotate overlay (shown during gameplay in portrait) -->
+    <div class="rotate-overlay" role="alert" aria-live="polite">
+      <span class="rotate-overlay-icon" aria-hidden="true">&#128241;</span>
+      <span>Rotate to landscape to play</span>
+      <span>Turn your device sideways for the best experience</span>
+    </div>
+
+    <!-- Game intro + loader (shown during game load sequence) -->
+    <div class="wasted-container" hidden aria-hidden="true"></div>
+    <div class="intro-container" hidden aria-hidden="true">
+      <video class="intro" src="/intro.mp4" aria-hidden="true"></video>
+      <div class="loader-container">
+        <div class="progress-bar-container" id="spinner">
+          <div class="progress-bar-fill"></div>
+        </div>
+        <div id="status">Loading...</div>
+        <div><progress id="progress"></progress></div>
+      </div>
+    </div>
+
+    <!-- Full-screen loading overlay (shown during download/extraction) -->
+    <div id="setup-progress" class="hidden" role="status" aria-label="Loading game files">
+      <p class="ls-title">LOADING...</p>
+      <p class="ls-sub">this may take some time on first load, be patient</p>
+      <div class="ls-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        <div class="ls-bar-fill" id="setup-progress-bar"></div>
+      </div>
+      <p id="setup-progress-percent" class="ls-pct" aria-live="polite">0%</p>
+      <p id="setup-progress-label" class="ls-label" aria-live="polite">Preparing&hellip;</p>
+    </div>
+
+    <!-- Main page -->
+    <div class="page-wrap">
+
+      <div class="vc-page">
+
+        <!-- Title -->
+        <header class="vc-header">
+          <h1 class="vc-title">Vice City</h1>
+        </header>
+
+        <!-- Setup overlay (functional hook — keeps JS working) -->
+        <div id="setup-overlay">
+          <!-- Error box -->
+          <div id="setup-error" class="vc-error hidden" role="alert"></div>
+
+          <!-- Storage status (shown when checking/ready) -->
+          <div id="storage-status" class="vc-storage-status hidden" role="status" aria-live="polite">Checking local game files…</div>
+
+          <!-- Hidden file picker elements (used when no auto-URL configured) -->
+          <a id="dl-link" class="hidden" href="#" download>Download game.tar.gz</a>
+          <label class="file-picker hidden" for="game-file-input">
+            <span class="file-picker-label">Select game.tar.gz</span>
+            <span id="selected-file-name" class="file-picker-name">No file selected</span>
+          </label>
+          <input type="file" id="game-file-input" class="hidden" accept=".tar.gz,.gz,application/gzip" aria-label="Select game archive file" />
+        </div>
+
+        <!-- Game control card -->
+        <div class="vc-game-card">
+
+          <!-- PLAY GAME -->
+          <div class="play-wrap click-to-play">
+            <button id="click-to-play-button" class="vc-btn-play" type="button" disabled aria-label="Play GTA Vice City">
+              PLAY GAME
+            </button>
+          </div>
+
+          <!-- SAVE MANAGER -->
+          <button id="save-manager-btn" class="vc-btn-secondary" type="button">
+            SAVE MANAGER
+          </button>
+
+          <!-- FPS Limit -->
+          <div class="vc-fps-row">
+            <label class="vc-fps-label" for="fps-limit-input">FPS LIMIT:</label>
+            <input id="fps-limit-input" class="vc-fps-input" type="number" value="0" min="0" max="300" step="10" aria-label="FPS Limit" />
+          </div>
+
+          <p class="vc-note"><strong>Note:</strong> Frame rate is unlocked (0) for best performance on modern hardware. However, the original game was designed for 30 FPS. Unlocked framerates may cause weird physics bugs.</p>
+          <p class="vc-note">If you get stuck on a mission due to physics, or if you are playing on a low-end or mobile device that is overheating, change the limit above to 30.</p>
+
+          <!-- Share / Fullscreen -->
+          <div class="vc-action-row">
+            <button id="share-btn" class="vc-action-btn" type="button">&#x2B06; Share</button>
+            <button id="fullscreen-btn" class="vc-action-btn" type="button">&#x26F6; Fullscreen</button>
+          </div>
+
+          <!-- Reset (hidden until game is ready) -->
+          <button id="reset-game-btn" class="vc-reset-btn hidden" type="button">Reset game data</button>
+
+        </div>
+
+        <!-- Content grid -->
+        <div class="vc-content-grid">
+
+          <!-- Left / main content -->
+          <div class="vc-content-main">
+
+            <section class="vc-section">
+              <h2 class="vc-section-title">About Vice City Web Edition</h2>
+              <p>Grand Theft Auto: Vice City Web Edition brings the legendary open world experience of 1986 Miami directly into your browser. Set in a sprawling, neon-soaked metropolis inspired by 1980s Miami, Vice City stands as one of the most iconic environments in gaming history.</p>
+              <p>The story follows Tommy Vercetti, a mobster recently released from prison after serving fifteen years. He is sent to Vice City by his former boss Sonny Forelli to oversee a drug deal. When the deal is ambushed and both the money and the drugs are lost, Tommy is left to pick up the pieces.</p>
+              <p>As he works to recover what was lost and take revenge on the Forelli family, Tommy becomes involved with the city's various criminal organizations and power players. Over time, he builds his own network of businesses and influence, ultimately rising to control Vice City's criminal underworld.</p>
+              <p>This technical port is built on the reVCDOS codebase, which utilizes the reverse-engineered reVC engine. This version requires no downloads and no installation because assets stream dynamically as you play. It is a complete, self-contained experience that preserves every mission from the original 2002 release.</p>
+              <p><strong>Key Features:</strong></p>
+              <ul>
+                <li><strong>Integrated Save Manager:</strong> You can upload your existing .b save files from a PC or PS2 to resume your progress. You can also download backups to keep your virtual progress safe.</li>
+                <li><strong>Instant Access:</strong> There are no large initial downloads. The WebAssembly engine loads in seconds and streams the map as you drive.</li>
+                <li><strong>Cross-Platform Support:</strong> Play with a standard keyboard and mouse on desktop or use integrated touch controls on mobile devices.</li>
+              </ul>
+              <p><a href="#faq">Click here to view the complete list of GTA Vice City cheat codes.</a></p>
+            </section>
+
+          </div>
+
+          <!-- Right / sidebar -->
+          <aside class="vc-sidebar">
+
+            <div class="vc-sidebar-card">
+              <h3 class="vc-sidebar-title">Keyboard Controls</h3>
+              <table class="vc-controls-table">
+                <tr><td>W A S D</td><td>Move</td></tr>
+                <tr><td>Mouse</td><td>Camera / Aim</td></tr>
+                <tr><td>Left Click</td><td>Fire</td></tr>
+                <tr><td>Right Click</td><td>Target lock</td></tr>
+                <tr><td>Space</td><td>Jump</td></tr>
+                <tr><td>Shift</td><td>Sprint / Accelerate</td></tr>
+                <tr><td>Ctrl</td><td>Crouch</td></tr>
+                <tr><td>F</td><td>Enter / Exit vehicle</td></tr>
+                <tr><td>Tab</td><td>Next weapon</td></tr>
+                <tr><td>Q</td><td>Previous weapon</td></tr>
+                <tr><td>Esc</td><td>Pause / Menu</td></tr>
+                <tr><td>M</td><td>Map</td></tr>
+                <tr><td>H</td><td>Horn</td></tr>
+                <tr><td>R</td><td>Handbrake</td></tr>
+              </table>
+            </div>
+
+            <div class="vc-sidebar-card">
+              <h3 class="vc-sidebar-title">Cheat Codes</h3>
+              <table class="vc-controls-table">
+                <tr><td>ASPIRINE</td><td>Full health</td></tr>
+                <tr><td>YOUWONTLIKETHIS</td><td>Full armor</td></tr>
+                <tr><td>FANNYMAGNET</td><td>Women follow you</td></tr>
+                <tr><td>LEAVEMEALONE</td><td>Lower wanted level</td></tr>
+                <tr><td>BRINGITON</td><td>6-star wanted level</td></tr>
+                <tr><td>PANZER</td><td>Spawn Rhino tank</td></tr>
+                <tr><td>BIGBANG</td><td>Blow up all cars</td></tr>
+                <tr><td>STILLLIKEDRESSINGUP</td><td>Change skin</td></tr>
+                <tr><td>ICANTTAKEITANYMORE</td><td>Suicide</td></tr>
+                <tr><td>CERTAINDEATH</td><td>Smoke cigarette</td></tr>
+                <tr><td>NUTTERTOOLS</td><td>Heavy weapons</td></tr>
+                <tr><td>PROFESSIONALTOOLS</td><td>Combat weapons</td></tr>
+              </table>
+            </div>
+
+          </aside>
+
+        </div>
+
+        <!-- Discussion -->
+        <section class="vc-section vc-discussion-section">
+          <h2 class="vc-section-title">Discussion</h2>
+          <div class="vc-disqus-wrap">
+            <p class="vc-disqus-msg">Disqus seems to be taking longer than usual. <a href="#" onclick="location.reload();return false;">Reload?</a></p>
+          </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="vc-section" id="faq">
+          <h2 class="vc-section-title">Frequently Asked Questions</h2>
+          <div class="vc-faq-list">
+
+            <details class="vc-faq-item">
+              <summary class="vc-faq-q">Is this the full game? Do I need to upload files? <span class="vc-faq-icon">+</span></summary>
+              <p class="vc-faq-a">Yes, this is the full GTA Vice City experience. No file uploads are required. The game files (~701 MB) are downloaded automatically on your first visit and cached in your browser for instant loads forever after.</p>
+            </details>
+
+            <details class="vc-faq-item">
+              <summary class="vc-faq-q">How does the Save Manager work? <span class="vc-faq-icon">+</span></summary>
+              <p class="vc-faq-a">You can upload your existing .b save files from a PC or PS2 to resume your progress. You can also download backups to keep your virtual progress safe at any time.</p>
+            </details>
+
+            <details class="vc-faq-item">
+              <summary class="vc-faq-q">Does it support controllers and mobile? <span class="vc-faq-icon">+</span></summary>
+              <p class="vc-faq-a">Yes. Gamepads are fully supported on desktop browsers. On mobile, integrated on-screen touch controls appear automatically. Play in landscape mode for the best experience.</p>
+            </details>
+
+            <details class="vc-faq-item">
+              <summary class="vc-faq-q">Why does the game show a black screen or run poorly? <span class="vc-faq-icon">+</span></summary>
+              <p class="vc-faq-a">Ensure your browser supports WebAssembly and Service Workers (Chrome 110+, Firefox 111+, Safari 16.4+). Try a hard-refresh (Ctrl+Shift+R). On slow devices, set the FPS limit to 30 above.</p>
+            </details>
+
+            <details class="vc-faq-item">
+              <summary class="vc-faq-q">Why are the physics acting weirdly or missions failing? <span class="vc-faq-icon">+</span></summary>
+              <p class="vc-faq-a">The original game was designed for 30 FPS. Running at higher framerates can cause physics glitches. Set the FPS limit to 30 in the panel above to fix mission-critical physics.</p>
+            </details>
+
+            <details class="vc-faq-item">
+              <summary class="vc-faq-q">My device is getting very hot. How do I fix this? <span class="vc-faq-icon">+</span></summary>
+              <p class="vc-faq-a">Set the FPS limit to 30 to significantly reduce CPU and GPU load. This is especially recommended for mobile devices and low-end laptops to prevent overheating.</p>
+            </details>
+
+          </div>
+        </section>
+
+        <footer class="vc-footer">
+          <p>Not affiliated with or endorsed by Rockstar Games or Take-Two Interactive. This is an independent WebAssembly browser port.</p>
+          <p><a href="/privacy.html">Privacy Policy</a> &middot; <a href="/terms.html">Terms of Service</a> &middot; <a href="/blog/">Blog</a></p>
+        </footer>
+
+      </div>
+    </div>
+
+    <!-- Game canvas -->
+    <canvas class="emscripten" id="canvas" aria-hidden="true"></canvas>
+
+    <!-- Touch controls -->
+    <div class="touch-controls-wrapper" aria-hidden="true">
+      <div id="move"></div>
+      <div id="look"></div>
+      <div class="touch-control radio"></div>
+      <div class="touch-control weapon"></div>
+      <div class="touch-control menu"></div>
+      <div class="touch-control fist"></div>
+      <div class="touch-control drift"></div>
+      <div class="touch-control run"></div>
+      <div class="touch-control car getIn"></div>
+      <div class="touch-control left"></div>
+      <div class="touch-control right"></div>
+      <div class="touch-control jump"></div>
+      <div class="touch-control car getOut"></div>
+      <div class="touch-control camera"></div>
+      <div class="touch-control mobile"></div>
+      <div class="touch-control job"></div>
+      <div class="touch-control horn"></div>
+      <div class="touch-control fireRight"></div>
+      <div class="touch-control fireLeft"></div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+    <script>
+      // FPS limit wiring
+      document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('fps-limit-input');
+        if (input) {
+          input.addEventListener('change', () => {
+            const v = parseInt(input.value) || 0;
+            if (window.__setFpsLimit) window.__setFpsLimit(v);
+          });
+        }
+        // Share button
+        const shareBtn = document.getElementById('share-btn');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', async () => {
+            if (navigator.share) {
+              try { await navigator.share({ title: 'GTA Vice City — Play Free in Browser', url: location.href }); } catch {}
+            } else {
+              await navigator.clipboard.writeText(location.href).catch(() => {});
+              shareBtn.textContent = 'Copied!';
+              setTimeout(() => { shareBtn.innerHTML = '&#x2B06; Share'; }, 2000);
+            }
+          });
+        }
+        // Fullscreen button
+        const fsBtn = document.getElementById('fullscreen-btn');
+        if (fsBtn) {
+          fsBtn.addEventListener('click', () => {
+            if (document.fullscreenElement) {
+              document.exitFullscreen().catch(() => {});
+            } else {
+              document.documentElement.requestFullscreen().catch(() => {});
+            }
+          });
+        }
+        // Save manager placeholder
+        const saveBtn = document.getElementById('save-manager-btn');
+        if (saveBtn) {
+          saveBtn.addEventListener('click', () => {
+            alert('Save Manager: Upload a .b save file from your PC or PS2 to resume your progress, or download your current save as a backup.');
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

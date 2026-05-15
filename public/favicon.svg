@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Dark background with rounded corners -->
+  <rect width="64" height="64" rx="12" fill="#06080f"/>
+  <!-- Pink glow layer -->
+  <rect width="64" height="64" rx="12" fill="url(#glow)" opacity="0.6"/>
+  <!-- Star shape (GTA style) -->
+  <polygon points="32,4 37,22 56,22 41,34 47,52 32,41 17,52 23,34 8,22 27,22" fill="none" stroke="#ff2870" stroke-width="1.5" opacity="0.35"/>
+  <!-- VC text -->
+  <text x="32" y="38" font-family="Arial Black, Impact, sans-serif" font-size="22" font-weight="900" fill="#ff2870" text-anchor="middle" letter-spacing="-1">VC</text>
+  <!-- Pink underline accent -->
+  <rect x="16" y="41" width="32" height="2.5" rx="1.25" fill="#ff2870" opacity="0.7"/>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff2870" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ff2870" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
