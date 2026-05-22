@@ -301,23 +301,63 @@
     <div class="touch-controls-wrapper" aria-hidden="true">
       <div id="move"></div>
       <div id="look"></div>
-      <div class="touch-control radio"></div>
-      <div class="touch-control weapon"></div>
-      <div class="touch-control menu"></div>
-      <div class="touch-control fist"></div>
-      <div class="touch-control drift"></div>
-      <div class="touch-control run"></div>
-      <div class="touch-control car getIn"></div>
+
+
+
+      <!-- Always visible in-game -->
+      <div class="touch-control menu">PAUSE</div>
+      <div class="touch-control weapon">WEAPON</div>
+      <button id="tc-cheat-btn" class="touch-control tc-cheat">CHEATS</button>
+
+      <!-- On-foot actions (hidden in car) -->
+      <div class="touch-control fist">ATTACK</div>
+      <div class="touch-control jump">JUMP</div>
+      <div class="touch-control run">SPRINT</div>
+      <div class="touch-control car getIn">ENTER<br>CAR</div>
+
+      <!-- In-car actions (hidden on foot) -->
+      <div class="touch-control car getOut">EXIT<br>CAR</div>
+      <div class="touch-control camera">VIEW</div>
+      <div class="touch-control horn">HORN</div>
+      <div class="touch-control drift">BRAKE</div>
+
+      <!-- Contextual -->
+      <div class="touch-control mobile">PHONE</div>
+      <div class="touch-control job">JOB</div>
+      <div class="touch-control radio">◀ RADIO ▶</div>
+      <div class="touch-control fireRight">FIRE R</div>
+      <div class="touch-control fireLeft">FIRE L</div>
+      
       <div class="touch-control left"></div>
       <div class="touch-control right"></div>
-      <div class="touch-control jump"></div>
-      <div class="touch-control car getOut"></div>
-      <div class="touch-control camera"></div>
-      <div class="touch-control mobile"></div>
-      <div class="touch-control job"></div>
-      <div class="touch-control horn"></div>
-      <div class="touch-control fireRight"></div>
-      <div class="touch-control fireLeft"></div>
+
+    <!-- Cheat keyboard overlay -->
+    <div id="cheat-overlay" class="cheat-overlay hidden">
+      <div class="cheat-panel">
+        <div class="cheat-header">
+          <span class="cheat-title">CHEAT CODES</span>
+          <button id="cheat-close-btn" class="cheat-close-btn">✕ CLOSE</button>
+        </div>
+        <div class="cheat-typed-row">
+          <span class="cheat-typed-label">TYPING:</span>
+          <span id="cheat-typed" class="cheat-typed">▮</span>
+        </div>
+        <div id="cheat-keys" class="cheat-keys"></div>
+        <div class="cheat-quick-title">QUICK CHEATS</div>
+        <div class="cheat-quick">
+          <button class="cheat-quick-btn" data-cheat="ASPIRINE">FULL HEALTH</button>
+          <button class="cheat-quick-btn" data-cheat="YOUWONTLIKETHIS">FULL ARMOR</button>
+          <button class="cheat-quick-btn" data-cheat="LEAVEMEALONE">CLEAR WANTED</button>
+          <button class="cheat-quick-btn" data-cheat="BRINGITON">6 STARS</button>
+          <button class="cheat-quick-btn" data-cheat="PANZER">SPAWN TANK</button>
+          <button class="cheat-quick-btn" data-cheat="BIGBANG">BLOW UP CARS</button>
+          <button class="cheat-quick-btn" data-cheat="NUTTERTOOLS">HEAVY WEAPONS</button>
+          <button class="cheat-quick-btn" data-cheat="PROFESSIONALTOOLS">COMBAT WEAPONS</button>
+          <button class="cheat-quick-btn" data-cheat="FANNYMAGNET">WOMEN FOLLOW</button>
+          <button class="cheat-quick-btn" data-cheat="STILLLIKEDRESSINGUP">CHANGE SKIN</button>
+        </div>
+     </div>
+
     </div>
 
     <script type="module" src="/src/main.js"></script>
