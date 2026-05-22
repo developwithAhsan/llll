@@ -881,6 +881,144 @@ display: none;
 }
 #tc-cheat-btn:active { background: rgba(80, 60, 0, 0.8); border-color: #ffd060; }
 .gameIsStarted[data-is-touch="1"] #tc-cheat-btn { display: flex; }
+
+/* ── Bottom-right 2×2 action grid ───────────────────────────────────────────
+   Col R: right: 3vmin    Col L: right: 23vmin
+   Row 1 (bottom): bottom: 3vmin
+   Row 2: bottom: 18vmin
+   Button size: 18vmin × 13vmin
+*/
+
+/* On-foot bottom row (SPRINT bottom-left, ENTER/RUN bottom-right) */
+.touch-control.run {
+  right: 23vmin; bottom: 3vmin;
+  width: 18vmin; height: 13vmin;
+}
+.touch-control.car.getIn {
+  right: 3vmin; bottom: 3vmin;
+  width: 18vmin; height: 13vmin;
+}
+/* On-foot top row (ATTACK left, JUMP right) */
+.touch-control.fist {
+  right: 23vmin; bottom: 18vmin;
+  width: 18vmin; height: 13vmin;
+}
+.touch-control.jump {
+  right: 3vmin; bottom: 18vmin;
+  width: 18vmin; height: 13vmin;
+}
+
+
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 22, 42, 0.78);
+  border: 2px solid rgba(255, 200, 50, 0.45);
+  border-radius: 10px;
+  color: #ffd060;
+  font-size: 2.4vmin;
+  font-weight: 700;
+  font-family: system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.05em;
+text-transform: uppercase;
+  touch-action: none;
+  pointer-events: all;
+  z-index: 102;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+#tc-cheat-btn:active { background: rgba(80, 60, 0, 0.8); border-color: #ffd060; }
+.gameIsStarted[data-is-touch="1"] #tc-cheat-btn { display: flex; }
+
+/* ── Bottom-right 2×2 action grid ───────────────────────────────────────────
+   Col R: right: 3vmin    Col L: right: 23vmin
+   Row 1 (bottom): bottom: 3vmin
+   Row 2: bottom: 18vmin
+   Button size: 18vmin × 13vmin
+*/
+.gameIsStarted[data-is-touch="1"][data-state-car="1"][data-state-menu="0"][data-state-cutscene="0"] .touch-control.drift,
+.gameIsStarted[data-is-touch="1"][data-state-car="1"][data-state-menu="0"][data-state-cutscene="0"] .touch-control.car.getOut,
+.gameIsStarted[data-is-touch="1"][data-state-car="1"][data-state-menu="0"][data-state-cutscene="0"] .touch-control.camera,
+.gameIsStarted[data-is-touch="1"][data-state-car="1"][data-state-menu="0"][data-state-cutscene="0"] .touch-control.horn { display: flex; }
+
+/* In-car guns (centre bottom) */
+.touch-control.fireRight,
+.touch-control.fireLeft {
+  bottom: 3vmin;
+  width: 18vmin; height: 13vmin;
+}
+.touch-control.fireRight { right: 3vmin; }
+.touch-control.fireLeft  { right: 23vmin; }
+.gameIsStarted[data-is-touch="1"][data-state-car="1"][data-state-car-gun="1"][data-state-menu="0"][data-state-cutscene="0"] .touch-control.fireRight,
+.gameIsStarted[data-is-touch="1"][data-state-car="1"][data-state-car-gun="1"][data-state-menu="0"][data-state-cutscene="0"] .touch-control.fireLeft { display: flex; }
+
+/* Contextual: phone ringing */
+.touch-control.mobile {
+  top: 15vmin; left: 3vmin;
+  width: 17vmin; height: 10vmin;
+  font-size: 2.4vmin;
+  border-color: rgba(100, 255, 100, 0.5);
+  color: #90ff90;
+}
+.gameIsStarted[data-is-touch="1"][data-state-mobring="1"] .touch-control.mobile { display: flex; }
+
+/* Contextual: job */
+.touch-control.job {
+  top: 28vmin; left: 3vmin;
+  width: 17vmin; height: 10vmin;
+  font-size: 2.4vmin;
+}
+.gameIsStarted[data-is-touch="1"][data-state-job="1"] .touch-control.job { display: flex; }
+
+/* Radio bar — in car, top-centre */
+.touch-control.radio {
+    top: 3vmin; left: 50%; transform: translateX(-50%);
+  width: 38vmin; height: 9vmin;
+  font-size: 2.2vmin;
+}
+.gameIsStarted[data-is-touch="1"][data-state-car="1"][data-state-menu="0"] .touch-control.radio { display: flex; }
+
+/* Joystick zones */
+#move {
+  position: fixed; inset: 0 50% 0 0; z-index: 90;
+}
+#look {
+  position: fixed; inset: 0 0 0 50%; z-index: 90;
+}
+
+/* ── Cheat keyboard overlay ───────────────────────────────────────────────── */
+.cheat-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(5, 10, 20, 0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.cheat-overlay.hidden { display: none !important; }
+
+.cheat-panel {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cheat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cheat-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 6vmin;
+  color: #ffd060;
+  letter-spacing: 0.08em;
+}
+.cheat-close-btn {
+  
   
 video::-webkit-media-controls { display: none !important; }
 video { pointer-events: none; }
