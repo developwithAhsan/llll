@@ -1056,7 +1056,61 @@ text-transform: uppercase;
   letter-spacing: 0.12em;
   word-break: break-all;
 }
+/* A-Z keyboard grid */
+.cheat-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+}
+.cheat-key {
+  width: calc((100% - 5px * 13) / 14);
+  min-width: 36px;
+  height: 42px;
+  background: rgba(20, 35, 65, 0.85);
+  border: 1.5px solid rgba(180, 210, 255, 0.3);
+  border-radius: 7px;
+  color: #fff;
+  font-size: 3.5vmin;
+  font-weight: 700;
+  font-family: system-ui, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cheat-key:active { background: rgba(50, 100, 200, 0.8); border-color: #8af; }
+.cheat-key-wide {
+  width: calc((100% - 5px * 13) / 7);
+  min-width: 72px;
+}
 
+/* Quick-cheat buttons */
+.cheat-quick-title {
+  color: rgba(255, 200, 50, 0.7);
+  font-size: 2.6vmin;
+  font-weight: 700;
+  font-family: system-ui, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cheat-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.cheat-quick-btn {
+  background: rgba(15, 28, 55, 0.85);
+  border: 1.5px solid rgba(255, 200, 50, 0.35);
+  border-radius: 8px;
+  color: #ffd060;
+  font-size: 2.6vmin;
+  font-weight: 700;
+  font-family: system-ui, sans-serif;
+  padding: 8px 12px;
+  cursor: pointer;
   
 video::-webkit-media-controls { display: none !important; }
 video { pointer-events: none; }
