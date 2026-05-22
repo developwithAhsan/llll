@@ -333,7 +333,27 @@ async function loadGame(data) {
     script.src = 'index.js';
     document.body.appendChild(script);
 
-    document.body.classList.add('gameIsStarted');
+    
+document.body.classList.add('gameIsStarted');
+
+    // Reset UI state so controls appear immediately
+    document.body.dataset.stateMenu = '0';
+    document.body.dataset.stateCar = '0';
+    document.body.dataset.stateCutscene = '0';
+    document.body.dataset.stateDisableControls = '0';
+    document.body.dataset.stateMobring = '0';
+    document.body.dataset.stateJob = '0';
+
+    // Expose state-update callbacks so the WASM engine can drive the UI
+    window.vcSetCar = (inCar, hasGun) => {
+        document.body.dataset.stateCar = inCar ? '1' : '0';
+        document.body.dataset.stateCarGun = (inCar && hasGun) ? '1' : '0';
+        document.body.dataset.stateCarWithWeapon = (inCar && hasGun) ? '1' : '0';
+    };
+    window.vcSetMenu = (open) => { document.body.dataset.stateMenu = open ? '1' : '0'; };
+    window.vcSetCutscene = (active) => { document.body.dataset.stateCutscene = active ? '1' : '0'; };
+    window.vcSetPhone = (ringing) => { document.body.dataset.stateMobring = ringing ? '1' : '0'; };
+    window.vcSetJob = (hasJob) => { document.body.dataset.stateJob = hasJob ? '1' : '0'; };
 
     const emulator = new GamepadEmulator();
     const gamepad = emulator.AddEmulatedGamepad(null, true);
