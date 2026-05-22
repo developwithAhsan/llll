@@ -705,8 +705,108 @@ const revc_ini = (() => {
         return cached;
     }
     return revc_iniDefault;
+
 })();
 
+// ── Cheat keyboard ────────────────────────────────────────────────────────────
+(function initCheatKeyboard() {
+    const overlay = document.getElementById('cheat-overlay');
+    const openBtn = document.getElementById('tc-cheat-btn');
+    const closeBtn = document.getElementById('cheat-close-btn');
+    const typedDisplay = document.getElementById('cheat-typed');
+    const keysContainer = document.getElementById('cheat-keys');
+
+    if (!overlay || !openBtn) return;
+
+    let typed = '';
+
+    function dispatchCheatKey(char) {
+        const key = char.toUpperCase();
+        const code = 'Key' + key;
+        const keyCode = key.charCodeAt(0);
+        const opts = { key, code, keyCode, which: keyCode, charCode: keyCode, bubbles: true, cancelable: true };
+        document.dispatchEvent(new KeyboardEvent('keydown', opts));
+        document.dispatchEvent(new KeyboardEvent('keypress', { ...opts }));
+        setTimeout(() => document.dispatchEvent(new KeyboardEvent('keyup', opts)), 80);
+    }
+
+    function sendCode(code) {
+        let i = 0;
+        const iv = setInterval(() => {
+            if (i >= code.length) { clearInterval(iv); return; }
+            dispatchCheatKey(code[i++]);
+        }, 110);
+    }
+
+    function updateDisplay() {
+        if (typedDisplay) typedDisplay.textContent = typed || '▮';
+    }
+
+    // Build A-Z keyboard
+    if (keysContainer) {
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(ch => {
+            const btn = document.createElement('button');
+            btn.className = 'cheat-key';
+            btn.textContent = ch;
+            btn.addEventListener('pointerdown', (e) => {
+                e.stopPropagation();
+                typed += ch;
+                updateDisplay();
+                dispatchCheatKey(ch);
+            });
+            keysContainer.appendChild(btn);
+        });
+        // SPACE and BACKSPACE
+        const spBtn = document.createElement('button');
+        spBtn.className = 'cheat-key cheat-key-wide';
+        spBtn.textContent = '⌫';
+        spBtn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            typed = typed.slice(0, -1);
+            updateDisplay();
+                    });
+        keysContainer.appendChild(spBtn);
+
+        const clrBtn = document.createElement('button');
+        clrBtn.className = 'cheat-key cheat-key-wide';
+        clrBtn.textContent = 'CLR';
+        clrBtn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            typed = '';
+            updateDisplay();
+        });
+        keysContainer.appendChild(clrBtn);
+    }
+
+    // Quick cheat buttons
+    document.querySelectorAll('[data-cheat]').forEach(btn => {
+        btn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            typed = btn.dataset.cheat;
+            updateDisplay();
+            sendCode(btn.dataset.cheat);
+            setTimeout(() => { typed = ''; updateDisplay(); }, 1500);
+        });
+    });
+
+    openBtn.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        overlay.classList.toggle('hidden');
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('pointerdown', (e) => {
+            e.stopPropagation();
+            overlay.classList.add('hidden');
+            typed = '';
+            updateDisplay();
+        });
+    }
+
+
+
+
+            
 // Configurable mode UI
 if (configurableMode) {
     const configPanel = document.getElementById('config-panel');
