@@ -800,8 +800,10 @@ const revc_ini = (() => {
             overlay.classList.add('hidden');
             typed = '';
             updateDisplay();
-        });
+        
+            });
     }
+})();
 
 
 
