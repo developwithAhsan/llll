@@ -1111,6 +1111,10 @@ text-transform: uppercase;
   font-family: system-ui, sans-serif;
   padding: 8px 12px;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.cheat-quick-btn:active { background: rgba(80, 60, 0, 0.85); border-color: #ffd060; }
   
 video::-webkit-media-controls { display: none !important; }
 video { pointer-events: none; }
