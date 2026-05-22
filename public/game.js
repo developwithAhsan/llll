@@ -20,7 +20,7 @@ let cheatsEnabled = params.get('cheats') === "1" || configurableMode;
 let maxFPS = parseInt(params.get('max_fps')) || 0;
 
 const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-let isTouch = isMobile && window.matchMedia('(pointer: coarse)').matches;
+let isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
 document.body.dataset.isTouch = isTouch ? 1 : 0;
 
